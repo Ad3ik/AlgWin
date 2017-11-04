@@ -143,17 +143,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EvolutionAlg.h" />
+    <ClInclude Include="Population.h" />
+    <ClInclude Include="PopulationInitializer.h" />
+    <ClInclude Include="Specimen.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StringHelper.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlgWin.cpp" />
+    <ClCompile Include="EvolutionAlg.cpp" />
+    <ClCompile Include="Population.cpp" />
+    <ClCompile Include="PopulationInitializer.cpp" />
+    <ClCompile Include="Specimen.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StringHelper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
