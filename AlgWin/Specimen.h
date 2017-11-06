@@ -9,9 +9,11 @@ public:
 	void AddCityToEnd(int city);
 	std::vector<int> GetSpecimenVector();
 	void SetSpecimenVector(std::vector<int> specimenVector);
+	void SetSpecimenEvaluateValue(double value);
+	double GetSpecimentEvaluateValue();
 
 private:
 	std::vector<int> specimenVector;
-	int speciemanEvaluateValue;
+	double speciemanEvaluateValue;
 };
 

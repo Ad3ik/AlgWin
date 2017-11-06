@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 class EvolutionAlg
 {
@@ -12,10 +13,12 @@ public:
 	EvolutionAlg(double crossoverRate, double mutationRate, int maxIterations, int generationsWithNoChangeBestSpecimenValue);
 	~EvolutionAlg();
 	void Initialize(int citiesCount);
-	void Initialize(std::string filePath, int populationCount);
+	void Initialize(std::string filePath, int populationCount, int selectedPopulationCount);
 	int GetGenerationsCount();
 	void SetGenerationsCount(int count);
 	void IncreaseGenerationCount();
+	
+
 
 private:
 	Population* population;
@@ -24,9 +27,10 @@ private:
 	int maxIterations;
 	int generationsCount;
 	int generationsWithNoChangeBestSpecimenValue;
+	
 
-	void Evaluate(Population population);
-	void Selection(Population population);
+	void Evaluate(Population* population);
+	void Selection(Population* population);
 	void Crossover(Population population);
 	void Mutation(Population population);
 	void StartAlgotitm();

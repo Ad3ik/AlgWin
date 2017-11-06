@@ -5,11 +5,13 @@
 Population::Population()
 {
 	this->populationCount = 20;
+	this->selectedPopulationCount = 10;
 }
 
-Population::Population(int populationCount)
+Population::Population(int populationCount, int selectedPopulationCount)
 {
 	this->populationCount = populationCount;
+	this->selectedPopulationCount = selectedPopulationCount;
 }
 
 
@@ -35,6 +37,31 @@ void Population::SetDistanceMatrix(std::vector<std::vector<int>> distanceMatrix)
 int Population::GetBestValueGenerationsCount()
 {
 	return this->bestValueGenerationsCount;
+}
+
+std::vector<Specimen*> Population::GetPopulationList()
+{
+	return this->populationList;
+}
+
+std::vector<std::vector<int>> Population::GetDistanceMatrix()
+{
+	return this->distanceMatrix;
+}
+
+std::vector<Specimen*> Population::GetSelectedPopulationList()
+{
+	return this->selectedPopulationList;
+}
+
+void Population::AddSelectedSpecimen(Specimen * specimen)
+{
+	this->selectedPopulationList.push_back(specimen);
+}
+
+int Population::GetSelectedPopulationCount()
+{
+	return this->selectedPopulationCount;
 }
 
 

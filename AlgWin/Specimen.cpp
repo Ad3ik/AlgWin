@@ -25,3 +25,13 @@ void Specimen::SetSpecimenVector(std::vector<int> specimenVector)
 {
 	this->specimenVector = specimenVector;
 }
+
+void Specimen::SetSpecimenEvaluateValue(double value)
+{
+	this->speciemanEvaluateValue = value;
+}
+
+double Specimen::GetSpecimentEvaluateValue()
+{
+	return this->speciemanEvaluateValue;
+}
