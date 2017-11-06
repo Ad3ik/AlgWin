@@ -17,6 +17,7 @@ public:
 	std::vector<Specimen*> GetSelectedPopulationList();
 	void AddSelectedSpecimen(Specimen* specimen);
 	int GetSelectedPopulationCount();
+	void SetPopulationLList(std::vector<Specimen*> populationList);
 
 	
 private:

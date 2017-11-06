@@ -64,4 +64,9 @@ int Population::GetSelectedPopulationCount()
 	return this->selectedPopulationCount;
 }
 
+void Population::SetPopulationLList(std::vector<Specimen*> populationList)
+{
+	this->populationList= populationList;
+}
+
 

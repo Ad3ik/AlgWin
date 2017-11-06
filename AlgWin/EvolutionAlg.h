@@ -5,12 +5,15 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+#include <random>
 
 class EvolutionAlg
 {
 public:
 	EvolutionAlg();
-	EvolutionAlg(double crossoverRate, double mutationRate, int maxIterations, int generationsWithNoChangeBestSpecimenValue);
+	EvolutionAlg(double crossoverRate, double mutationRate, int maxIterations, int generationsWithNoChangeBestSpecimenValue, int crossOverType);
 	~EvolutionAlg();
 	void Initialize(int citiesCount);
 	void Initialize(std::string filePath, int populationCount, int selectedPopulationCount);
@@ -27,11 +30,15 @@ private:
 	int maxIterations;
 	int generationsCount;
 	int generationsWithNoChangeBestSpecimenValue;
+	int crossOverType;
 	
 
 	void Evaluate(Population* population);
 	void Selection(Population* population);
-	void Crossover(Population population);
+	void Crossover(Population* population);
+	void CrossoverPMX(Population* population);
+	void CrossoverOX(Population* population);
+	void CrossoverEX(Population* population);
 	void Mutation(Population population);
 	void StartAlgotitm();
 };

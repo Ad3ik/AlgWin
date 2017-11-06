@@ -35,3 +35,8 @@ double Specimen::GetSpecimentEvaluateValue()
 {
 	return this->speciemanEvaluateValue;
 }
+
+void Specimen::SetSpecimenVectorValue(int index, int value)
+{
+	this->specimenVector[index] = value;
+}
