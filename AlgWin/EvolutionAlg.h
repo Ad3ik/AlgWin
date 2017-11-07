@@ -39,7 +39,7 @@ private:
 	void CrossoverPMX(Population* population);
 	void CrossoverOX(Population* population);
 	void CrossoverEX(Population* population);
-	void Mutation(Population population);
+	void Mutation(Population* population);
 	void StartAlgotitm();
 };
 

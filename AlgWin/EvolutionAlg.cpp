@@ -197,8 +197,27 @@ void EvolutionAlg::CrossoverEX(Population * population)
 
 
 
-void EvolutionAlg::Mutation(Population population)
+void EvolutionAlg::Mutation(Population* population)
 {
+
+	srand(time(NULL));
+	for (size_t i = 0; i < population->GetPopulationList().size(); i++)
+	{
+		double randomMutationRate = (double)rand()/ RAND_MAX;
+
+		if (randomMutationRate < this->mutationRate) {
+			Specimen* mutatedSpecimen = population->GetPopulationList()[i];
+			int firstMutatedGene = rand() % mutatedSpecimen->GetSpecimenVector().size();
+			int secondMutatedGene = rand() % mutatedSpecimen->GetSpecimenVector().size();
+			int tmpMutatedGene= mutatedSpecimen->GetSpecimenVector()[firstMutatedGene];
+			mutatedSpecimen->SetSpecimenVectorValue(firstMutatedGene, mutatedSpecimen->GetSpecimenVector()[secondMutatedGene]);
+			mutatedSpecimen->SetSpecimenVectorValue(secondMutatedGene, tmpMutatedGene);
+		}
+	}
+
+
+
+
 }
 
 void EvolutionAlg::StartAlgotitm()
@@ -208,7 +227,8 @@ void EvolutionAlg::StartAlgotitm()
 		Evaluate(this->population);
 		Selection(this->population);
 		Crossover(this->population);
-		if (population->GetSelectedPopulationList()[0]->GetSpecimentEvaluateValue()==population->GetBestSpecimenEvaluateValue())
+		Mutation(this->population);
+		if (population->GetSelectedPopulationList()[0]->GetSpecimentEvaluateValue() == population->GetBestSpecimenEvaluateValue())
 		{
 			population->SetBestValueGenerationsCount(population->GetBestValueGenerationsCount() + 1);
 		}
