@@ -12,6 +12,8 @@ Population::Population(int populationCount, int selectedPopulationCount)
 {
 	this->populationCount = populationCount;
 	this->selectedPopulationCount = selectedPopulationCount;
+	this->bestValueGenerationsCount = 0;
+	this->bestSpecimenEvaluateValue = INFINITY;
 }
 
 
@@ -67,6 +69,26 @@ int Population::GetSelectedPopulationCount()
 void Population::SetPopulationLList(std::vector<Specimen*> populationList)
 {
 	this->populationList= populationList;
+}
+
+void Population::SetSelectedPopulationList(std::vector<Specimen*> selectedPopulationList)
+{
+	this->selectedPopulationList = selectedPopulationList;
+}
+
+void Population::SetBestSpecimenEvaluateValue(double value)
+{
+	this->bestSpecimenEvaluateValue = value;
+}
+
+double Population::GetBestSpecimenEvaluateValue()
+{
+	return this->bestSpecimenEvaluateValue;
+}
+
+void Population::SetBestValueGenerationsCount(double value)
+{
+	this->bestValueGenerationsCount = value;
 }
 
 

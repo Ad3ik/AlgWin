@@ -69,6 +69,7 @@ void EvolutionAlg::Evaluate(Population* population)
 
 void EvolutionAlg::Selection(Population* population)
 {
+	population->SetSelectedPopulationList({});
 	std::vector<Specimen*> populationList = population->GetPopulationList();
 	for (size_t i = 0; i < population->GetSelectedPopulationCount(); i++)
 	{
@@ -137,29 +138,32 @@ void EvolutionAlg::CrossoverPMX(Population * population)
 			bool shouldCopy = true;
 			do
 			{
+				if (!geneFinding) {
+					firstSpecimenGene = firstSpecimentVector[i];
+					secondSpecimenGene = secondSpecimentVector[i];
+				}
+				bool geneFinding = false;
 
-				firstSpecimenGene = firstSpecimentVector[i];
-				secondSpecimenGene = secondSpecimentVector[i];
-				for (size_t i = crossOverSpot; i < firstSpecimentVector.size() / 2 + crossOverSpot; i++)
+				for (size_t j = crossOverSpot; j < firstSpecimentVector.size() / 2 + crossOverSpot; j++)
 				{
-					if (firstSpecimentVector[i] == secondSpecimenGene) {
+					if (firstSpecimentVector[j] == secondSpecimenGene) {
 						shouldCopy = false;
 						break;
 					}
-					if (firstSpecimenGene == secondSpecimentVector[i]) {
-						firstSpecimenGene = firstSpecimentVector[i];
+					if (firstSpecimenGene == secondSpecimentVector[j]) {
+						firstSpecimenGene = firstSpecimentVector[j];
 						geneFinding = true;
 					}
 				}
 			} while (geneFinding);
 			if (shouldCopy)
 			{
-				for (size_t i = 0; i < firstSpecimentVector.size(); i++)
+				for (size_t k = 0; k < firstSpecimentVector.size(); k++)
 				{
 
-					if (firstSpecimenGene == secondSpecimentVector[i])
+					if (firstSpecimenGene == secondSpecimentVector[k])
 					{
-						newSpecimen->SetSpecimenVectorValue(i, secondSpecimenGene);
+						newSpecimen->SetSpecimenVectorValue(k, secondSpecimenGene);
 
 					}
 				}
@@ -174,10 +178,12 @@ void EvolutionAlg::CrossoverPMX(Population * population)
 				newSpecimen->SetSpecimenVectorValue(i, secondSpecimentVector[i]);
 			}
 		}
-		population->AddSpecimen(newSpecimen);
+		//population->AddSpecimen(newSpecimen);
+		populationList.push_back(newSpecimen);
 	}
-	}
-	
+	population->SetPopulationLList(populationList);
+}
+
 
 void EvolutionAlg::CrossoverOX(Population * population)
 {
@@ -202,7 +208,17 @@ void EvolutionAlg::StartAlgotitm()
 		Evaluate(this->population);
 		Selection(this->population);
 		Crossover(this->population);
+		if (population->GetSelectedPopulationList()[0]->GetSpecimentEvaluateValue()==population->GetBestSpecimenEvaluateValue())
+		{
+			population->SetBestValueGenerationsCount(population->GetBestValueGenerationsCount() + 1);
+		}
+		else
+		{
+			population->SetBestSpecimenEvaluateValue(population->GetSelectedPopulationList()[0]->GetSpecimentEvaluateValue());
+			population->SetBestValueGenerationsCount(1);
+		}
+
 	}
-	int a = 5;
+
 
 }

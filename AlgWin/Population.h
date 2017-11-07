@@ -18,8 +18,11 @@ public:
 	void AddSelectedSpecimen(Specimen* specimen);
 	int GetSelectedPopulationCount();
 	void SetPopulationLList(std::vector<Specimen*> populationList);
+	void SetSelectedPopulationList(std::vector < Specimen*> selectedPopulationList);
+	void SetBestSpecimenEvaluateValue(double value);
+	double GetBestSpecimenEvaluateValue();
+	void SetBestValueGenerationsCount(double value);
 
-	
 private:
 	int populationCount;
 	std::vector<std::vector<int>> distanceMatrix;
