@@ -142,7 +142,7 @@ void EvolutionAlg::CrossoverPMX(Population * population)
 					firstSpecimenGene = firstSpecimentVector[i];
 					secondSpecimenGene = secondSpecimentVector[i];
 				}
-				bool geneFinding = false;
+			    geneFinding = false;
 
 				for (size_t j = crossOverSpot; j < firstSpecimentVector.size() / 2 + crossOverSpot; j++)
 				{
@@ -239,6 +239,8 @@ void EvolutionAlg::StartAlgotitm()
 		}
 
 	}
-
+	if (true) {
+		int a = 6;
+	}
 
 }
