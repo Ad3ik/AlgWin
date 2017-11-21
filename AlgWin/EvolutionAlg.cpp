@@ -86,7 +86,7 @@ void EvolutionAlg::Selection(Population* population)
 		population->AddSelectedSpecimen(bestSpecimen);
 		populationList.erase(std::remove(populationList.begin(), populationList.end(), bestSpecimen), populationList.end());
 	}
-	population->SetPopulationLList({});
+	//population->SetPopulationLList({});
 }
 
 void EvolutionAlg::Crossover(Population* population)
@@ -111,12 +111,15 @@ void EvolutionAlg::CrossoverPMX(Population * population)
 {
 	std::vector<Specimen*> populationList = population->GetPopulationList();
 	srand(time(NULL));
-	while (populationList.size() < population->GetPopulationCount())
+	//while (populationList.size() < population->GetPopulationCount())
+	//{
+		//int randomSpecimenNumber = rand() % population->GetSelectedPopulationCount();
+		//int randomSpecimenNumber2 = rand() % population->GetSelectedPopulationCount();
+	std::random_shuffle(populationList.begin(), populationList.end());
+	for (size_t m = 0; m < populationList.size(); m += 2)
 	{
-		int randomSpecimenNumber = rand() % population->GetSelectedPopulationCount();
-		int randomSpecimenNumber2 = rand() % population->GetSelectedPopulationCount();
-		Specimen* specimenFirst = population->GetSelectedPopulationList()[randomSpecimenNumber];
-		Specimen* specimenSecond = population->GetSelectedPopulationList()[randomSpecimenNumber2];
+		Specimen* specimenFirst = populationList[m];
+		Specimen* specimenSecond = populationList[m + 1];
 		std::vector<int> firstSpecimentVector = specimenFirst->GetSpecimenVector();
 		std::vector<int> secondSpecimentVector = specimenSecond->GetSpecimenVector();
 		Specimen* newSpecimen = new Specimen();
@@ -142,7 +145,7 @@ void EvolutionAlg::CrossoverPMX(Population * population)
 					firstSpecimenGene = firstSpecimentVector[i];
 					secondSpecimenGene = secondSpecimentVector[i];
 				}
-			    geneFinding = false;
+				geneFinding = false;
 
 				for (size_t j = crossOverSpot; j < firstSpecimentVector.size() / 2 + crossOverSpot; j++)
 				{
@@ -179,14 +182,184 @@ void EvolutionAlg::CrossoverPMX(Population * population)
 			}
 		}
 		//population->AddSpecimen(newSpecimen);
-		populationList.push_back(newSpecimen);
+		populationList[m] = newSpecimen;
+
+
+		Specimen* specimenFirst2 = populationList[m + 1];
+		Specimen* specimenSecond2 = populationList[m];
+		std::vector<int> firstSpecimentVector2 = specimenFirst2->GetSpecimenVector();
+		std::vector<int> secondSpecimentVector2 = specimenSecond2->GetSpecimenVector();
+		Specimen* newSpecimen2 = new Specimen();
+		int crossOverSpot2 = rand() % (specimenFirst2->GetSpecimenVector().size() / 2 + 1);
+		for (size_t i = 0; i < specimenFirst2->GetSpecimenVector().size(); i++)
+		{
+			newSpecimen2->AddCityToEnd(-1);
+		}
+		for (size_t i = crossOverSpot2; i < firstSpecimentVector2.size() / 2 + crossOverSpot2; i++)
+		{
+			newSpecimen2->SetSpecimenVectorValue(i, firstSpecimentVector2[i]);
+
+		}
+		for (size_t i = crossOverSpot2; i < firstSpecimentVector2.size() / 2 + crossOverSpot2; i++)
+		{
+			int firstSpecimenGene;
+			int secondSpecimenGene;
+			bool geneFinding = false;
+			bool shouldCopy = true;
+			do
+			{
+				if (!geneFinding) {
+					firstSpecimenGene = firstSpecimentVector2[i];
+					secondSpecimenGene = secondSpecimentVector2[i];
+				}
+				geneFinding = false;
+
+				for (size_t j = crossOverSpot2; j < firstSpecimentVector2.size() / 2 + crossOverSpot2; j++)
+				{
+					if (firstSpecimentVector2[j] == secondSpecimenGene) {
+						shouldCopy = false;
+						break;
+					}
+					if (firstSpecimenGene == secondSpecimentVector2[j]) {
+						firstSpecimenGene = firstSpecimentVector2[j];
+						geneFinding = true;
+					}
+				}
+			} while (geneFinding);
+			if (shouldCopy)
+			{
+				for (size_t k = 0; k < firstSpecimentVector2.size(); k++)
+				{
+
+					if (firstSpecimenGene == secondSpecimentVector2[k])
+					{
+						newSpecimen2->SetSpecimenVectorValue(k, secondSpecimenGene);
+
+					}
+				}
+			}
+
+
+		}
+		std::vector<int> newSpecimentVector2 = newSpecimen2->GetSpecimenVector();
+		for (size_t i = 0; i < firstSpecimentVector2.size(); i++)
+		{
+			if (newSpecimentVector2[i] == -1) {
+				newSpecimen2->SetSpecimenVectorValue(i, secondSpecimentVector2[i]);
+			}
+		}
+		populationList[m + 1] = newSpecimen2;
 	}
+	//}
 	population->SetPopulationLList(populationList);
 }
 
 
 void EvolutionAlg::CrossoverOX(Population * population)
 {
+	std::vector<Specimen*> populationList = population->GetPopulationList();
+	srand(time(NULL));
+	std::random_shuffle(populationList.begin(), populationList.end());
+	for (size_t m = 0; m < populationList.size(); m += 2)
+	{
+		double randomCrossOverRate = (double)rand() / RAND_MAX;
+		Specimen* specimenFirst = populationList[m];
+		Specimen* specimenSecond = populationList[m + 1];
+		Specimen* newSpecimen = new Specimen();
+		int crossOverSpot = rand() % (specimenFirst->GetSpecimenVector().size() / 2 + 1);
+		if (randomCrossOverRate < this->crossoverRate) {
+			Specimen* specimenFirst = populationList[m];
+			Specimen* specimenSecond = populationList[m + 1];
+			std::vector<int> firstSpecimentVector = specimenFirst->GetSpecimenVector();
+			std::vector<int> secondSpecimentVector = specimenSecond->GetSpecimenVector();
+
+
+			for (size_t i = 0; i < specimenFirst->GetSpecimenVector().size(); i++)
+			{
+				newSpecimen->AddCityToEnd(-1);
+			}
+			int firstIndexAfterCrossOverSpot = 0;
+			for (size_t i = crossOverSpot; i < firstSpecimentVector.size() / 2 + crossOverSpot; i++)
+			{
+				newSpecimen->SetSpecimenVectorValue(i, firstSpecimentVector[i]);
+				firstIndexAfterCrossOverSpot = i;
+
+			}
+
+			// ->
+			for (size_t i = firstIndexAfterCrossOverSpot + 1; i < firstSpecimentVector.size() - firstSpecimentVector.size() / 2 + firstIndexAfterCrossOverSpot + 1; i++)
+			{
+				for (size_t j = firstIndexAfterCrossOverSpot + 1; j < firstSpecimentVector.size() + firstIndexAfterCrossOverSpot + 1; j++)
+				{
+					bool geneWasUsed = false;
+					for (size_t k = crossOverSpot; k < firstSpecimentVector.size() + crossOverSpot; k++)
+					{
+						if (secondSpecimentVector[j%firstSpecimentVector.size()] == newSpecimen->GetSpecimenVector()[k%firstSpecimentVector.size()])
+						{
+							geneWasUsed = true;
+						}
+					}
+					if (!geneWasUsed)
+					{
+						newSpecimen->SetSpecimenVectorValue(i%firstSpecimentVector.size(), secondSpecimentVector[j%firstSpecimentVector.size()]);
+						break;
+					}
+				}
+
+			}
+		}
+		Specimen* newSpecimen2 = new Specimen();
+		double randomCrossOverRate2 = (double)rand() / RAND_MAX;
+		if (randomCrossOverRate2 < this->crossoverRate) {
+			Specimen* specimenFirst2 = populationList[m + 1];
+			Specimen* specimenSecond2 = populationList[m];
+			std::vector<int> firstSpecimentVector2 = specimenFirst2->GetSpecimenVector();
+			std::vector<int> secondSpecimentVector2 = specimenSecond2->GetSpecimenVector();
+
+			//int crossOverSpot2 = rand() % (specimenFirst2->GetSpecimenVector().size() / 2 + 1);
+			for (size_t i = 0; i < specimenFirst2->GetSpecimenVector().size(); i++)
+			{
+				newSpecimen2->AddCityToEnd(-1);
+			}
+			int firstIndexAfterCrossOverSpot2 = 0;
+			for (size_t i = crossOverSpot; i < firstSpecimentVector2.size() / 2 + crossOverSpot; i++)
+			{
+				newSpecimen2->SetSpecimenVectorValue(i, firstSpecimentVector2[i]);
+				firstIndexAfterCrossOverSpot2 = i;
+
+			}
+
+			// ->
+			for (size_t i = firstIndexAfterCrossOverSpot2 + 1; i < firstSpecimentVector2.size() - firstSpecimentVector2.size() / 2 + firstIndexAfterCrossOverSpot2 + 1; i++)
+			{
+				for (size_t j = firstIndexAfterCrossOverSpot2 + 1; j < firstSpecimentVector2.size() + firstIndexAfterCrossOverSpot2 + 1; j++)
+				{
+					bool geneWasUsed = false;
+					for (size_t k = crossOverSpot; k < firstSpecimentVector2.size() + crossOverSpot; k++)
+					{
+						if (secondSpecimentVector2[j%firstSpecimentVector2.size()] == newSpecimen2->GetSpecimenVector()[k%firstSpecimentVector2.size()])
+						{
+							geneWasUsed = true;
+						}
+					}
+					if (!geneWasUsed)
+					{
+						newSpecimen2->SetSpecimenVectorValue(i%firstSpecimentVector2.size(), secondSpecimentVector2[j%firstSpecimentVector2.size()]);
+						break;
+					}
+				}
+
+			}
+		}
+		if (randomCrossOverRate < this->crossoverRate) {
+			populationList[m] = newSpecimen;
+		}
+		if (randomCrossOverRate2 < this->crossoverRate) {
+			populationList[m + 1] = newSpecimen2;
+		}
+	}
+	population->SetPopulationLList(populationList);
+
 }
 
 void EvolutionAlg::CrossoverEX(Population * population)
@@ -203,13 +376,13 @@ void EvolutionAlg::Mutation(Population* population)
 	srand(time(NULL));
 	for (size_t i = 0; i < population->GetPopulationList().size(); i++)
 	{
-		double randomMutationRate = (double)rand()/ RAND_MAX;
+		double randomMutationRate = (double)rand() / RAND_MAX;
 
 		if (randomMutationRate < this->mutationRate) {
 			Specimen* mutatedSpecimen = population->GetPopulationList()[i];
 			int firstMutatedGene = rand() % mutatedSpecimen->GetSpecimenVector().size();
 			int secondMutatedGene = rand() % mutatedSpecimen->GetSpecimenVector().size();
-			int tmpMutatedGene= mutatedSpecimen->GetSpecimenVector()[firstMutatedGene];
+			int tmpMutatedGene = mutatedSpecimen->GetSpecimenVector()[firstMutatedGene];
 			mutatedSpecimen->SetSpecimenVectorValue(firstMutatedGene, mutatedSpecimen->GetSpecimenVector()[secondMutatedGene]);
 			mutatedSpecimen->SetSpecimenVectorValue(secondMutatedGene, tmpMutatedGene);
 		}
