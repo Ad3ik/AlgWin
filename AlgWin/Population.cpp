@@ -14,6 +14,14 @@ Population::Population(int populationCount, int selectedPopulationCount)
 	this->selectedPopulationCount = selectedPopulationCount;
 	this->bestValueGenerationsCount = 0;
 	this->bestSpecimenEvaluateValue = INFINITY;
+	this->bestSpecimenEvaluateOveralValue = 1000000;
+	std::vector<Specimen*> vector = {};
+	for (size_t i = 0; i < populationCount; i++)
+	{
+		Specimen* specimen = new Specimen();
+		vector.push_back(specimen);
+	}
+	this->SetSelectedPopulationList(vector);
 }
 
 

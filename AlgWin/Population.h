@@ -22,7 +22,7 @@ public:
 	void SetBestSpecimenEvaluateValue(double value);
 	double GetBestSpecimenEvaluateValue();
 	void SetBestValueGenerationsCount(double value);
-
+	int bestSpecimenEvaluateOveralValue;
 private:
 	int populationCount;
 	std::vector<std::vector<int>> distanceMatrix;
