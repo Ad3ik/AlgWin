@@ -40,3 +40,8 @@ void Specimen::SetSpecimenVectorValue(int index, int value)
 {
 	this->specimenVector[index] = value;
 }
+
+int Specimen::GetLastCity()
+{
+	return this->specimenVector.back();
+}

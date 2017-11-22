@@ -12,6 +12,7 @@ public:
 	void SetSpecimenEvaluateValue(double value);
 	double GetSpecimentEvaluateValue();
 	void SetSpecimenVectorValue(int index, int value);
+	int GetLastCity();
 
 private:
 	std::vector<int> specimenVector;
