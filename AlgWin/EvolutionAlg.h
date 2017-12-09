@@ -13,7 +13,7 @@ class EvolutionAlg
 {
 public:
 	EvolutionAlg();
-	EvolutionAlg(double crossoverRate, double mutationRate, int maxIterations, int generationsWithNoChangeBestSpecimenValue, int crossOverType);
+	EvolutionAlg(double crossoverRate, double mutationRate, double bestSpecimanSelectionMultiplication, int maxIterations, int generationsWithNoChangeBestSpecimenValue, int crossOverType);
 	~EvolutionAlg();
 	void Initialize(int citiesCount);
 	void Initialize(std::string filePath, int populationCount, int selectedPopulationCount);
@@ -27,6 +27,7 @@ private:
 	Population* population;
 	double crossoverRate;
 	double mutationRate;
+	double bestSpecimanSelectionMultiplication;
 	int maxIterations;
 	int generationsCount;
 	int generationsWithNoChangeBestSpecimenValue;

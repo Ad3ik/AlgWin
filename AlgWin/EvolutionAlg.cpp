@@ -6,7 +6,7 @@ EvolutionAlg::EvolutionAlg()
 {
 }
 
-EvolutionAlg::EvolutionAlg(double crossoverRate, double mutationRate, int maxIterations, int generationsWithNoChangeBestSpecimenValue, int crossOverType)
+EvolutionAlg::EvolutionAlg(double crossoverRate, double mutationRate, double bestSpecimanSelectionMultiplication, int maxIterations, int generationsWithNoChangeBestSpecimenValue, int crossOverType)
 {
 	this->crossoverRate = crossoverRate;
 	this->mutationRate = mutationRate;
@@ -14,6 +14,7 @@ EvolutionAlg::EvolutionAlg(double crossoverRate, double mutationRate, int maxIte
 	this->generationsCount = 0;
 	this->generationsWithNoChangeBestSpecimenValue = generationsWithNoChangeBestSpecimenValue;
 	this->crossOverType = crossOverType;
+	this->bestSpecimanSelectionMultiplication = bestSpecimanSelectionMultiplication;
 }
 
 
@@ -104,56 +105,90 @@ void EvolutionAlg::Selection(Population* population)
 	for (size_t i = 0; i < selectedPopulationList.size(); i += 2)
 	{
 		if (selectedPopulationList[i]->GetSpecimenVector().size() != 0) {
-			std::vector<Specimen*> specimenV = {};
-			specimenV.push_back(populationList[i]);
-			specimenV.push_back(populationList[i + 1]);
-			specimenV.push_back(selectedPopulationList[i]);
-			specimenV.push_back(selectedPopulationList[i + 1]);
-			Specimen* bestSpecimen = NULL;
-			double bestEvaluatedValue = INFINITY;
-			for (size_t j = 0; j < specimenV.size(); j++)
-			{
-				if (specimenV[j]->GetSpecimentEvaluateValue() < bestEvaluatedValue)
-				{
-					bestEvaluatedValue = specimenV[j]->GetSpecimentEvaluateValue();
-					bestSpecimen = specimenV[j];
+			//std::vector<Specimen*> specimenV = {};
+			//specimenV.push_back(populationList[i]);
+			//specimenV.push_back(populationList[i + 1]);
+			//specimenV.push_back(selectedPopulationList[i]);
+			//specimenV.push_back(selectedPopulationList[i + 1]);
+			//Specimen* bestSpecimen = NULL;
+			//double bestEvaluatedValue = INFINITY;
+			//for (size_t j = 0; j < specimenV.size(); j++)
+			//{
+			//	if (specimenV[j]->GetSpecimentEvaluateValue() < bestEvaluatedValue)
+			//	{
+			//		bestEvaluatedValue = specimenV[j]->GetSpecimentEvaluateValue();
+			//		bestSpecimen = specimenV[j];
 
-				}
+			//	}
 
-			}
-			specimenV.erase(std::remove(specimenV.begin(), specimenV.end(), bestSpecimen), specimenV.end());
+			//}
+			//specimenV.erase(std::remove(specimenV.begin(), specimenV.end(), bestSpecimen), specimenV.end());
 
-			Specimen* bestSpecimen2 = NULL;
-			bestEvaluatedValue = INFINITY;
-			for (size_t j = 0; j < specimenV.size(); j++)
-			{
-				if (specimenV[j]->GetSpecimentEvaluateValue() < bestEvaluatedValue)
-				{
-					bestEvaluatedValue = specimenV[j]->GetSpecimentEvaluateValue();
-					bestSpecimen2 = specimenV[j];
+			//Specimen* bestSpecimen2 = NULL;
+			//bestEvaluatedValue = INFINITY;
+			//for (size_t j = 0; j < specimenV.size(); j++)
+			//{
+			//	if (specimenV[j]->GetSpecimentEvaluateValue() < bestEvaluatedValue)
+			//	{
+			//		bestEvaluatedValue = specimenV[j]->GetSpecimentEvaluateValue();
+			//		bestSpecimen2 = specimenV[j];
 
-				}
+			//	}
 
-			}
-			populationList[i] = bestSpecimen;
-			populationList[i + 1] = bestSpecimen2;
+			//}
+			//populationList[i] = bestSpecimen;
+			//populationList[i + 1] = bestSpecimen2;
+
+			populationList[i] = selectedPopulationList[i];
+			populationList[i + 1] = selectedPopulationList[i + 1];
 
 		}
 	}
 	population->SetPopulationLList(populationList);
 
 	double bestSpecimenEvaluateValue = INFINITY;
+	double worstSpecimenEvaluateValue = 0;
+	double specimenEvaluateValuesDifference;
 	for (auto &Specimen : populationList)
 	{
 		if (Specimen->GetSpecimentEvaluateValue() < bestSpecimenEvaluateValue)
 		{
 			bestSpecimenEvaluateValue = Specimen->GetSpecimentEvaluateValue();
 		}
+		if (Specimen->GetSpecimentEvaluateValue() > worstSpecimenEvaluateValue)
+		{
+			worstSpecimenEvaluateValue = Specimen->GetSpecimentEvaluateValue();
+		}
 	}
 	if (bestSpecimenEvaluateValue < population->bestSpecimenEvaluateOveralValue && bestSpecimenEvaluateValue != 0) {
 		population->bestSpecimenEvaluateOveralValue = bestSpecimenEvaluateValue;
 	}
+	specimenEvaluateValuesDifference = worstSpecimenEvaluateValue - bestSpecimenEvaluateValue;
 	//population->SetPopulationLList({});
+
+	//start of selection best specimans
+	std::vector<Specimen*> newPopulationList = {};
+	double* ary = new double[101];
+	ary[0] = 0;
+	for (size_t i = 1; i < populationList.size()+1; i++)
+	{
+		double cutrrentDifference = worstSpecimenEvaluateValue - populationList[i-1]->GetSpecimentEvaluateValue();
+		double calculatedValue = 1 + (cutrrentDifference / specimenEvaluateValuesDifference) * (bestSpecimanSelectionMultiplication - 1);
+		ary[i] = ary[i - 1] + calculatedValue;
+	}
+	double maxRandValue = ary[populationList.size()];
+
+	while (newPopulationList.size() < populationList.size()) {
+		double randomValue = (double)rand() / RAND_MAX;
+		double multiRandomValue = randomValue*maxRandValue;
+		for (size_t i = 0; i < populationList.size(); i++)
+		{
+			if (multiRandomValue > ary[i] && multiRandomValue < ary[i + 1]) {
+				newPopulationList.push_back(populationList[i]);
+			}
+		}
+	}
+	population->SetPopulationLList(newPopulationList);
 }
 
 void EvolutionAlg::Crossover(Population* population)
